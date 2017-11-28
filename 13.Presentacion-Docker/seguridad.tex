@@ -1,0 +1,428 @@
+
+\documentclass[xcolor=dvipsnames]{beamer} % dvipsnames gives more built-in colors
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+
+\mode<presentation> {
+
+\usetheme{CambridgeUS}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from
+
+\definecolor{utfsmred}{HTML}{D60019}
+\definecolor{utfsmyellow}{HTML}{F7AE00}
+\definecolor{utfsmgreen}{HTML}{008452}
+\definecolor{utfsmblue}{HTML}{004B85}
+
+
+\newenvironment<>{rosa}[1][]{
+  \setbeamercolor{block title example}{fg=white,bg=blue!75!black}%
+  \begin{example}#2[#1]}{
+  \end{example}
+}
+
+\usepackage{hyperref}
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usecolortheme[named=utfsmblue]{structure}
+\setbeamercolor{titlelike}{parent=structure,fg=utfsmblue}
+\setbeamercolor{frametitle}{fg=utfsmblue}
+
+%\setbeamercolor{section in head/foot}{bg=Brown}
+%\setbeamercolor{author in head/foot}{bg=Brown}
+%\setbeamercolor{date in head/foot}{fg=Brown}
+
+\setbeamercolor*{enumerate item}{fg=utfsmred}
+\setbeamercolor*{enumerate subitem}{fg=utfsmred}
+\setbeamercolor*{enumerate subsubitem}{fg=utfsmred}
+
+\setbeamercolor*{itemize item}{fg=utfsmred}
+\setbeamercolor*{itemize subitem}{fg=utfsmred}
+\setbeamercolor*{itemize subsubitem}{fg=utfsmred}
+
+\setbeamercolor{item projected}{bg=utfsmred}
+
+
+\setbeamertemplate{itemize items}[square]
+\setbeamertemplate{enumerate items}[default]
+
+
+\setbeamercolor{section in head/foot}{bg=utfsmblue}
+
+\setbeamercolor{block title}{bg=utfsmblue!80,fg=white}
+\setbeamercolor{block title alerted}{bg=utfsmred!80,fg=white}
+\setbeamercolor{block title example}{bg=utfsmgreen!80,fg=white}
+
+\setbeamertemplate{sections/subsections in toc}[square]
+\setbeamercolor{section number projected}{bg=utfsmblue,fg=white}
+
+
+}
+
+\usepackage[normalem]{ulem}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{listings}
+\lstset{ %
+language=C,
+basicstyle=\tiny\ttfamily,
+keywordstyle=,
+numbers=none,
+numberstyle=\tiny\ttfamily,
+stepnumber=1,
+showspaces=false,
+showstringspaces=false,
+showtabs=false,
+breaklines=true,
+frame=tb,
+framerule=0.5pt,
+tabsize=4,
+framexleftmargin=0.5em,
+framexrightmargin=0.5em,
+xleftmargin=0.5em,
+xrightmargin=0.5em,
+}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{MySQL Replication}
+\subtitle{\small{Seminario de Desarrollo de Software - Casa Central.}}
+\author{Maximiliano Osorio\\\small{mosorio@inf.utfsm.cl}} 
+\institute[UTFSM]
+{
+Universidad Técnica Federico Santa María
+\medskip
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+%
+%	TITLE PAGE
+%
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+\maketitle
+
+
+
+
+\begin{frame}{Docker containers}
+	\begin{figure}
+		\centering
+\includegraphicscopyright[width=\textwidth,height=0.8\textheight,keepaspectratio]{images/shipping-container-for-code}{Imagen: docker.com}
+	\end{figure}
+\end{frame}
+
+
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+%
+%
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+\section*{Docker}
+
+\begin{frame}{Docker}
+
+	\begin{itemize}
+		\item Docker is an open platform for developing, shipping, and running applications.
+		\item Docker allows you to package an application with all of its dependencies into a standardized unit for software development.
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Docker Benefits}
+	\begin{itemize}
+\item Fast (deployment, migration, restarts)
+\item Secure
+\item Lightweight (save disk \& CPU)
+\item Open Source
+\item Portable software
+\item Microservices and integrations (APIs)
+\item Simplify DevOps
+\item Version control capabilities
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{}
+	\begin{figure}
+		\centering
+		\includegraphicscopyright[width=\linewidth]{images/container_vs_vm.jpg}{\href{http://www.qafe.com/what-is-docker-why-en-how-use-it/}{qafe.com}}
+	\end{figure}
+\end{frame}
+
+
+
+
+\begin{frame}[fragile]
+\frametitle{Namespaces}
+
+\begin{itemize}
+	\item Provide processes with their own view of the system.
+	\item Multiple namespaces: pid, net, mnt, uts, ipc, user
+\end{itemize}
+Docker: Namespaces provide the first and most straightforward form of isolation: processes running within a container cannot see, and even less affect, processes running in another container, or in the host system.
+   
+\end{frame}
+
+\begin{frame}{Docker registry}
+
+\begin{figure}[H]
+  \centering
+  \includegraphicscopyright[width=\textwidth,height=0.6\textheight,keepaspectratio]{images/process.png}{http://cloud.51cto.com/}
+    \label{fig:dynamic}
+\end{figure}	
+\end{frame}
+
+%\begin{frame}[fragile]
+%\frametitle{}
+%\begin{itemize}
+%	\item Namespaces: PID, Mount, Network, IPC.
+%	\item Cgroups: Limit CPU, Memory, IO.
+%	\item Capabilities: reduced root access.
+%	\item Special kernel modules like AppArmor, SElinux - Provides granular control over Kernel resources.
+%\end{itemize}
+%\end{frame}
+
+
+\subsection{Images}
+
+\section{Containers don't contain}
+\section*{Tips}
+
+\begin{frame}[fragile]
+\frametitle{Why don't containers contain?}
+Dan Walsh \footnote{Mr. SElinux} meant that not all resources that a container has access to are namespaces.
+\begin{itemize}
+	\item UID (by default) If a user is root inside a container and breaks out of the container, that user will be root on the host. 
+	\item The kernel keyring
+	\item The kernel itself and any kernel modules
+	\item The system time \texttt{SYS\_TIME}
+	\item Namespaces have vulnerabilities!
+\end{itemize}
+\end{frame}
+
+\subsection{Containers and namespacing}
+
+\subsection{UID/GID}
+
+\begin{frame}[fragile]
+\frametitle{uid/gid 1}
+\begin{itemize}
+	\item  The linux kernel is responsible for managing the uid and gid space
+	\item the uid and gid that created the process are examined by the kernel to determine if it has enough privileges to modify the file
+\end{itemize}
+
+The username isn't used here, the uid is used!
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{}
+\begin{lstlisting}
+[mosorio@host ~]$  docker run -d ubuntu:latest sleep infinity
+\end{lstlisting}
+
+\begin{lstlisting}
+root     30636  0.0  0.0   4372   364 ?        Ss   20:43   0:00          \_ sleep infinity	
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{uid/gid 2}
+Does root inside the container == root outside the container?
+\begin{itemize}
+	\item  Yes, because, as I mentioned, there’s a single kernel and a single, shared pool of uids and gids.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{uid/gid 3}
+\begin{lstlisting}
+[mosorio@host ~]$ docker run -it -u $(id -u $USER):$(id -g $GROUP) centos:7 bash
+bash-4.2$ id
+uid=1002 gid=1002 groups=1002
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{User Namespaces}
+As of Docker 1.10, you can enable user namespacing by starting the
+kernel with the \texttt{--userns-remap}.
+\begin{itemize}
+	\item WARNING: Using Docker volumes becomes more complex as the changed UIDs affect access privileges.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{}
+\begin{lstlisting}
+root@container:/# id
+uid=0(root) gid=0(root) groups=0(root)
+\end{lstlisting}
+
+\begin{lstlisting}
+root@host:/# ps -eaf | grep bash
+231072 4080 4040 ... bash
+\end{lstlisting}
+
+userId 0 in container is mapped to 231072 in host
+\begin{lstlisting}
+root@host:/# cat /proc/4080/uid_map
+0 231072 65536
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Docker daemon}
+Any user who can start and run Docker containers effectively has root access to the host. For example, consider that you can run the following:
+\begin{lstlisting}
+usermod -aG docker dummyuser
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Docker daemon}
+\begin{lstlisting}
+[mosorio@host ~]$ docker run -v /:/homeroot -it debian bash
+root@b33b601c262c:/# ls /homeroot/root/.ssh
+authorized_keys  config  id_rsa  known_hosts
+\end{lstlisting}
+\end{frame}
+
+
+\subsection{Remove setuid/setgid Binaries}
+
+\begin{frame}[fragile]
+\frametitle{Remove setuid/setgid Binaries}
+Chances are that your application doesn't need any setuid or
+setgid binaries.
+\begin{lstlisting}
+ find / -perm +6000 -type f -exec chmod a-s {} \;
+\end{lstlisting}
+\end{frame}
+
+\subsection{DDoS - cgroups}
+\begin{frame}[fragile]
+\frametitle{Limit Memory and CPU}
+Limiting memory protects against both DoS attacks and applications with memory leaks 
+\begin{lstlisting}
+docker run -m 128m --memory-swap 128m ubuntu:latest
+docker run -d --name load1 -c 2048
+docker run -d --restart=on-failure:10 my-flaky-image
+\end{lstlisting}
+Also, apply resource limits (ulimits)!
+\end{frame}
+
+
+\subsection{Capabilities}
+
+\begin{frame}[fragile]
+\frametitle{Capabilities}
+The Linux kernel defines sets of privileges—called capabilities—that can be assigned to processes to provide them with greater access to the system.
+
+\begin{lstlisting}
+$ docker run --cap-drop all debian chown 100 /tmp
+chown: changing ownership of '/tmp': Operation not permitted
+\end{lstlisting}
+\end{frame}
+
+\subsection{Images}
+
+
+\begin{frame}{}
+	\begin{figure}
+		\centering
+		\includegraphicscopyright[width=\textwidth,height=0.9\textheight,keepaspectratio]{images/dockerhub-fig-3}{\href{http://dl.acm.org/citation.cfm?id=3029832}{A Study of Security Vulnerabilities on Docker Hub}}
+
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}{}
+	\begin{figure}
+		\centering
+		\includegraphicscopyright[width=\textwidth,height=0.9\textheight,keepaspectratio]{images/dockerhub-fig-5}{\href{http://dl.acm.org/citation.cfm?id=3029832}{A Study of Security Vulnerabilities on Docker Hub}}
+
+	\end{figure}
+\end{frame}
+\section{Docker is about running random crap from the internet as root on your host.}
+\begin{frame}{}
+	\begin{figure}
+		\centering
+		\includegraphicscopyright[width=\textwidth,height=0.9\textheight,keepaspectratio]{images/devopssec}{\href{http://devops.tumblr.com}{http://devops.tumblr.com}}
+
+	\end{figure}
+\end{frame}
+\begin{frame}[fragile]
+\frametitle{Applying Updates}
+The ability to quickly apply updates to a running system is critical to maintaining security, especially when vulnerabilities are disclosed in common utilities and frameworks.
+\begin{itemize}
+	\item   Identify images that require updating
+	\item Get or create an updated version of each base image
+	\item For each dependent image, run docker build with the \-\-nocache argument. Again, push these images
+	\item Restart
+	\item Clean
+\end{itemize}
+\end{frame}
+
+\section{SElinux}
+
+\begin{frame}[fragile]
+\frametitle{SElinux}
+The SELinux, or Security Enhanced Linux, module was developed by the United States National Security Agency (NSA) as an implementation of what they call mandatory access control (MAC)
+\end{frame}
+ 
+
+\begin{frame}{}
+	\begin{figure}
+		\centering
+		\includegraphicscopyright[width=\textwidth,height=0.9\textheight,keepaspectratio]{images/dogs-and-cats}{\href{https://people.redhat.com/duffy/selinux/selinux-coloring-book_A4-Stapled.pdf}{RedHat}}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{}
+	\begin{figure}
+		\centering
+		\includegraphicscopyright[width=\textwidth,height=0.2\textheight,keepaspectratio]{selinux/selinux2}{\href{https://people.redhat.com/duffy/selinux/selinux-coloring-book_A4-Stapled.pdf}{RedHat}}
+		\includegraphicscopyright[width=\textwidth,height=0.9\textheight,keepaspectratio]{selinux/selinux3}{\href{https://people.redhat.com/duffy/selinux/selinux-coloring-book_A4-Stapled.pdf}{RedHat}}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{}
+	\begin{figure}
+		\centering
+		\includegraphicscopyright[width=\textwidth,height=0.9\textheight,keepaspectratio]{selinux/selinux4}{\href{https://people.redhat.com/duffy/selinux/selinux-coloring-book_A4-Stapled.pdf}{RedHat}}
+
+	\end{figure}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+\frametitle{Recommendations}
+\begin{itemize}
+	\item   Only run container images from trusted parties.
+Container applications should drop privileges or run without privileges whenever possible.
+	\item Make sure the kernel is always updated with the latest security fixes; the security kernel is critical.
+
+	\item Do not disable security features of the host operating system.
+	\item Examine your container images for security flaws and make sure the provider fixes them in a timely manner.
+		\item Further security can be provided at the kernel level by running hardened kernels and using security modules such as AppArmor or SELinux.
+\end{itemize}
+\end{frame}
+\nocite{*}
+
+
+\bibliographystyle{ieeetr}
+      \bibliography{ref.bib}
+\end{document}
