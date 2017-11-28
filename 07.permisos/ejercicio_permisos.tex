@@ -1,0 +1,74 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[scale=0.8]{geometry}
+\usepackage[spanish]{babel}
+\usepackage{float}
+\usepackage{listings}
+
+\title{Ejercicio de permisos}
+\author{Maximiliano Osorio \\ mosorio@inf.utfsm.cl}
+\date{Valparaíso, \today}
+
+
+%\printanswers
+
+% Create a True False question format
+\newcommand*{\TrueFalse}[1]{%
+\ifprintanswers
+    \ifthenelse{\equal{#1}{T}}{%
+        \textbf{Verdadero}\hspace*{14pt}Falso
+    }{
+        Verdadero\hspace*{14pt}\textbf{Falso}
+    }
+\else
+    {V}\hspace*{20pt}F
+\fi
+} 
+%% The following code is based on an answer by Gonzalo Medina
+%% http://tex.stackexchange.com/a/13106/39194
+\newlength\TFlengthA
+\newlength\TFlengthB
+\settowidth\TFlengthA{\hspace*{1.16in}}
+\newcommand\TFQuestion[2]{%
+    \setlength\TFlengthB{\linewidth}
+    \addtolength\TFlengthB{-\TFlengthA}
+    \parbox[t]{\TFlengthA}{\TrueFalse{#1}}\parbox[t]{\TFlengthB}{#2}}
+
+\begin{document}
+\maketitle
+Usuario y sus grupos.
+    \begin{lstlisting}
+juana    juana,ricardo
+tulio    tulio,ricardo
+patana   patana,mario
+freddy   freddy,mario
+    \end{lstlisting}
+    
+Directorios y archivos
+    \begin{lstlisting}
+drwxrwxr-x  tulio   ricardo dir
+-rw-rw-r--  juana   juana   lfile1
+-rw-r--rw-  juana   ricardo lfile2
+-rw-rw-r--  tulio   ricardo rfile1
+-rw-r-----  tulio   ricardo rfile2
+    \end{lstlisting}
+    
+
+
+\begin{questions}
+\fullwidth{%
+Encierre V (verdadero) o F (falso) según corresponda.
+}
+\question\TFQuestion{T}{juana es la unica persona que pueden cambiar los contenidos de lfile1.}
+\question\TFQuestion{F}{tulio puede ver los contenidos lfile2 pero no puede modificar a lfile2.}
+\question\TFQuestion{T}{tulio puede borrar lfile1 y lfile2.}
+\question\TFQuestion{T}{patana puede cambiar los contenidos de lfile2}
+\question\TFQuestion{T}{juana puede cambiar los contenidos de rfile1.}
+\question\TFQuestion{T}{tulio puede ver y modificar el contenido de rfile2.}
+\question\TFQuestion{T}{juana puede ver pero no modificar el contenido de rfile2.}
+\question\TFQuestion{T}{patana y freddy no tienen acceso al contenido de rfile2. }
+
+\end{questions}
+\end{document}

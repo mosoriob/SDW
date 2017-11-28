@@ -1,0 +1,305 @@
+
+\documentclass[xcolor=dvipsnames]{beamer} % dvipsnames gives more built-in colors
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+
+\mode<presentation> {
+
+\usetheme{CambridgeUS}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from
+
+\definecolor{utfsmred}{HTML}{D60019}
+\definecolor{utfsmyellow}{HTML}{F7AE00}
+\definecolor{utfsmgreen}{HTML}{008452}
+\definecolor{utfsmblue}{HTML}{004B85}
+
+
+\newenvironment<>{rosa}[1][]{
+  \setbeamercolor{block title example}{fg=white,bg=blue!75!black}%
+  \begin{example}#2[#1]}{
+  \end{example}
+}
+
+\usepackage{hyperref}
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usecolortheme[named=utfsmblue]{structure}
+\setbeamercolor{titlelike}{parent=structure,fg=utfsmblue}
+\setbeamercolor{frametitle}{fg=utfsmblue}
+
+%\setbeamercolor{section in head/foot}{bg=Brown}
+%\setbeamercolor{author in head/foot}{bg=Brown}
+%\setbeamercolor{date in head/foot}{fg=Brown}
+
+\setbeamercolor*{enumerate item}{fg=utfsmred}
+\setbeamercolor*{enumerate subitem}{fg=utfsmred}
+\setbeamercolor*{enumerate subsubitem}{fg=utfsmred}
+
+\setbeamercolor*{itemize item}{fg=utfsmred}
+\setbeamercolor*{itemize subitem}{fg=utfsmred}
+\setbeamercolor*{itemize subsubitem}{fg=utfsmred}
+
+\setbeamercolor{item projected}{bg=utfsmred}
+
+
+\setbeamertemplate{itemize items}[square]
+\setbeamertemplate{enumerate items}[default]
+
+
+\setbeamercolor{section in head/foot}{bg=utfsmblue}
+
+\setbeamercolor{block title}{bg=utfsmblue!80,fg=white}
+\setbeamercolor{block title alerted}{bg=utfsmred!80,fg=white}
+\setbeamercolor{block title example}{bg=utfsmgreen!80,fg=white}
+
+\setbeamertemplate{sections/subsections in toc}[square]
+\setbeamercolor{section number projected}{bg=utfsmblue,fg=white}
+
+
+}
+
+\usepackage[normalem]{ulem}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{listings}
+\lstset{ %
+language=C,
+basicstyle=\tiny\ttfamily,
+keywordstyle=,
+numbers=none,
+numberstyle=\tiny\ttfamily,
+stepnumber=1,
+showspaces=false,
+showstringspaces=false,
+showtabs=false,
+breaklines=true,
+frame=tb,
+framerule=0.5pt,
+tabsize=4,
+framexleftmargin=0.5em,
+framexrightmargin=0.5em,
+xleftmargin=0.5em,
+xrightmargin=0.5em,
+}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{MySQL Replication}
+\subtitle{\small{Seminario de Desarrollo de Software - Casa Central.}}
+\author{Maximiliano Osorio\\\small{mosorio@inf.utfsm.cl}} 
+\institute[UTFSM]
+{
+Universidad Técnica Federico Santa María
+\medskip
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+	
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+%
+%	TITLE PAGE
+%
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+
+
+
+%\begin{block}{Dependencias}
+%\end{block}
+\maketitle
+\section{Replication events}
+
+\begin{frame}[fragile]
+\frametitle{Replication events}
+\begin{itemize}
+  \item Statement based – in which case these are write queries
+  \item Row based – in this case these are changes to records, sort of row diffs if you will
+\end{itemize}
+
+\end{frame}
+%------------------------------------------------
+
+\section{On the master}
+
+\begin{frame}[fragile]
+\frametitle{On the master}
+\begin{itemize}
+  \item For replication to work, first of all master needs to be writing replication events to a special log called binary log.
+  \item This is usually very lightweight activity (assuming events are not synchronized to disk), because writes are buffered and because they are sequential.
+  \item The binary log file stores data that replication slave will be reading later.
+\end{itemize}
+
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{On the master}
+\begin{itemize}
+  \item Whenever a replication slave connects to a master, master creates a new thread for the connection
+  \item And then it does whatever the client – replication slave in this case – asks
+  \begin{enumerate}
+  	\item feeding replication slave with events from the binary log
+  	\item notifying slave about newly written events to its binary log
+  \end{enumerate}
+\end{itemize}
+
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{On the master}
+\begin{itemize}
+  \item Slaves that are up to date will mostly be reading events that are still cached in OS cache on the master, so there is not going to be any physical disk reads on the master in order to feed binary log events
+  \item However, when you connect a replication slave that is few hours or even days behind, it will initially start reading binary logs that were written hours or days ago. 
+\end{itemize}
+
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{On the replica}
+When you start replication, two threads are started on the slave:
+\begin{itemize}
+  \item IO thread: This process called IO thread connects to a master, reads binary log events from the master, they come in and just copies them over to a local log file called relay log.
+  \item  SQL thread – reads events from a relay log stored locally on the replication slave (the file that was written by IO thread) and then applies them as fast as possible.
+\end{itemize}
+
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{}
+
+If you want to see where IO thread currently is, check the following in 
+\begin{lstlisting}
+show slave status \G:
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{show slave status}
+\begin{itemize}
+  \item Master\_Log\_File – last file copied from the master (most of the time it would be the same as last binary log written by a master)
+  \item Read\_Master\_Log\_Pos – binary log from master is copied over to the relay log on the slave up until this position.
+\end{itemize}
+And then you can compare it to the output of \verb|show master status \G| from the master.
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{SQL thread}
+
+reads events from a relay log stored locally on the replication slave (the file that was written by IO thread) and then applies them as fast as possible.
+
+\begin{itemize}
+  \item Relay\_Master\_Log\_File – binary log from master, that SQL thread is "working on" (in reality it is working on relay log, so it’s just a convenient way to display information) 
+  \item Exec\_Master\_Log\_Pos – which position from master binary log is being executed by SQL thread.
+\end{itemize}
+
+
+
+\end{frame}
+%------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Replication lag}
+First thing you want to know is which of the two replication threads is behind.
+\begin{itemize}
+  \item Most of the time it will be the SQL thread
+\end{itemize}
+
+\begin{enumerate}
+	\item IO bound
+	\item CPU bound
+\end{enumerate}
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{vmstat}
+\begin{lstlisting}
+[root@smt1 mysql]# vmstat 10
+procs -----------memory---------- ---swap-- -----io---- --system-- -----cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+13  0      0 880156  40060 2140824    0    0    12   750  895 1045 32  8 54  6  0
+ 0  0      0 877116  40060 2141312    0    0     0  1783 2185 23112 44 10 41  5  0
+15  0      0 872648  40068 2141960    0    0     0  1747 2204 25743 41 11 46  2  0
+ 0  0      0 868056  40068 2142604    0    0     0  1803 2164 26224 40 11 44  5  0
+17  1      0 863216  40068 2143160    0    0     0  1875 1948 23020 36  9 50  5  0
+ 0  0      0 858384  40168 2143656    0    0     0  1063 1855 21116 32  9 45 14  0
+23  0      0 855848  40176 2144232    0    0     0  1755 2036 23181 36 10 48  6  0
+49  0      0 851248  40184 2144648    0    0     0  1679 2313 22832 45 10 40  5  0
+10  0      0 846292  40192 2145248    0    0     0  1911 1980 23185 36  9 50  4  0
+ 0  0      0 844260  40196 2145868    0    0     0  1757 2152 26387 39 11 45  5  0
+ 0  3      0 839296  40196 2146520    0    0     0  1439 2104 25096 38 10 50  1  0
+\end{lstlisting}
+
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{show processlist}
+\begin{lstlisting}
+mysql> show processlist;
++-----+---------------+--------+---------+------+----------------+--------------------------------------------------------------------+-----------+---------------+-----------+
+| Id  | User          |db     | Command | Time | State          | Info                                                               | Rows_sent | Rows_examined | Rows_read |
++-----+---------------+--------+---------+------+----------------+--------------------------------------------------------------------+-----------+---------------+-----------+
+|   1 | root          |  NULL   | Sleep   |    0 |                | NULL                                                               |         0 |             0 |         0 |
+| ...
+|  32 | root          |  sbtest | Execute |    0 | NULL           | COMMIT                                                             |         0 |             0 |         0 |
+|  33 | root          |  sbtest | Execute |    0 | NULL           | COMMIT                                                             |         0 |             0 |         0 |
+|  34 | root          |  sbtest | Execute |    0 | Sorting result | SELECT c from sbtest where id between 365260 and 365359 order by c |         0 |             0 |         0 |
+|  35 | root          |  sbtest | Execute |    0 | NULL           | COMMIT                                                             |         0 |             0 |         0 |
+|  36 | root          |  sbtest | Execute |    0 | NULL           | COMMIT                                                             |         0 |             0 |         0 |
+|  37 | root          |  sbtest | Execute |    0 | NULL           | COMMIT                                                             |         0 |             0 |         0 |
+|  38 | root          |  sbtest | Execute |    0 | Writing to net | DELETE from sbtest where id=496460                                 |         0 |             1 |         1 |
+|  39 | root          |  sbtest | Execute |    0 | NULL           | COMMIT                                                             |         0 |             0 |         0 |
+...
+|  89 | root          |  sbtest | Execute |    0 | NULL           | COMMIT                                                             |         0 |             0 |         0 |
+|  90 | root          |  sbtest | Execute |    0 | NULL           | COMMIT                                                             |         0 |             0 |         0 |
+|  91 | root          |  sbtest | Execute |    0 | NULL           | COMMIT                                                             |         0 |             0 |         0 |
+| 268 | root          |  NULL   | Query   |    0 | NULL           | show processlist                                                   |         0 |             0 |         0 |
++-----+---------------+-----------------+--------+---------+------+----------------+--------------------------------------------------------------------+-----------+---------------+-----------+
+68 rows in set (0.00 sec)
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{ fully ACID mode}
+\begin{lstlisting}
+mysql> select @@innodb_flush_log_at_trx_commit;
++----------------------------------+
+| @@innodb_flush_log_at_trx_commit |
++----------------------------------+
+|                                1 |
++----------------------------------+
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+%------------------------------------------------
+\nocite{*}
+\begin{frame}
+\frametitle{References}
+\bibliographystyle{ieeetr}
+\bibliography{ref.bib}
+\end{frame}
+
+\end{document}
+
+

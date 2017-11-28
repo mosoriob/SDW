@@ -1,0 +1,151 @@
+\documentclass[12pt]{exam}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\includegraphics{main}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{float}
+\newcommand{\class}{SDW}
+\newcommand{\term}{Primavera 2017}
+\newcommand{\examnum}{Quiz 0}
+\newcommand{\examdate}{\today}
+\newcommand{\timelimit}{}
+
+\pagestyle{head}
+\firstpageheader{}{}{}
+\runningheader{\class}{\examnum\ - Página \thepage\ de \numpages}{\examdate}
+\runningheadrule
+\pointpoints{punto}{puntos}
+\hpword{Puntos:}
+\vpword{Puntos}
+\htword{Total}
+\vtword{Total:}
+\vsword{Resultado}
+\vqword{Problema}
+
+\begin{document}
+
+\noindent
+\begin{tabular*}{\textwidth}{l @{\extracolsep{\fill}} r @{\extracolsep{6pt}} l}
+\textbf{\class} & \textbf{Nombre:} & \makebox[3in]{\hrulefill}\\
+\textbf{\term} &&\\
+\textbf{\examnum} &&\\
+\textbf{\examdate} &&\\
+\end{tabular*}\\
+\rule[2ex]{\textwidth}{2pt}
+%Here, the questions begin
+\begin{questions}
+
+\question Muestre como listar las direcciones IP y rutas de un Linux.
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+\question Muestre la diferencia entre la señal reload y restart de un servicio Linux. ¿Cómo se hace?
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+\question ¿Qué es una llamada de sistemas? Muestre una, muestre como revisar las llamadas de sistemas de un programa en Linux. ¿Por qué podría ser util?
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+
+\question ¿Cómo mide el rendimiento de su programa?
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+
+
+\question Muestre como montar una partición automáticamente en Linux.
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+\question Muestre como revisar los logs de un Linux. 
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+\question Muestre como conectarse a una máquina con IP 10.10.9.2 por ssh
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+\question Muestre como listar los archivos y carpetas de la ruta /etc/
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+\question Muestre como cambiar los permisos a la carpeta /var/www/sitio pensando que un directorio web.
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+\question ¿Conoce alguno de los siguientes sistemas \textit{Configuration Management}? ¿Lo usa?
+\begin{checkboxes}
+ \choice Ansible 
+ \choice Puppet
+ \choice Chef
+ \choice Salt
+\end{checkboxes}
+
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+
+\question El servidor 10.10.9.2 está escuchando en el puerto 1023, muestre como probar la conexión TCP desde otra máquina.
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+\question Muestre los puertos UDP donde un servidor está escuchando
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+\question Defina que es un log file en una base de datos.
+\fillwithdottedlines{2em}
+\vspace{1em}
+\question Respecto al uso de memoria en base de datos, ¿qué acción fundamental usted debe realizar luego de instalar una base de datos?
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+
+\question Defina un sistema MASTER/SLAVE de una base de datos
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+\question Defina que un worker en un servidor web
+\fillwithdottedlines{2em}
+\vspace{1em}
+
+\question Muestre como ver la carga de su servidor
+\fillwithdottedlines{2em}
+\vspace{1em}
+\newpage
+\question Respecto a la figura \ref{1} y \ref{2}, ¿observa un problema de seguridad? ¿cúal? 
+\begin{figure*}[h]
+\fillwithdottedlines{4em}
+\vspace{1em}
+
+
+\begin{lstlisting}
+root      1296  0.1  1.1 411992 95360 pts/1     1:50 nginx	(servidor web)
+\end{lstlisting}
+\caption{Procesos corriendo en un servidor}
+\label{1}
+\end{figure*}
+
+
+\begin{figure*}[h]
+
+\begin{lstlisting}
+#  netstat -tpanl
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      550/nginx	
+\end{lstlisting}
+\caption{Estado de puertos de servidor}
+\label{2}
+
+\end{figure*}
+
+\question ¿Conoce Docker?, ¿le interesa aprender?
+\fillwithdottedlines{4em}
+\vspace{1em}
+
+\end{questions}
+
+\end{document}

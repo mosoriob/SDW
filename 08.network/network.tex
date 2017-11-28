@@ -1,0 +1,318 @@
+
+\documentclass[xcolor=dvipsnames]{beamer} % dvipsnames gives more built-in colors
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+
+\mode<presentation> {
+
+\usetheme{CambridgeUS}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from
+
+\definecolor{utfsmred}{HTML}{D60019}
+\definecolor{utfsmyellow}{HTML}{F7AE00}
+\definecolor{utfsmgreen}{HTML}{008452}
+\definecolor{utfsmblue}{HTML}{004B85}
+
+
+\newenvironment<>{rosa}[1][]{
+  \setbeamercolor{block title example}{fg=white,bg=blue!75!black}%
+  \begin{example}#2[#1]}{
+  \end{example}
+}
+
+\usepackage{hyperref}
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usecolortheme[named=utfsmblue]{structure}
+\setbeamercolor{titlelike}{parent=structure,fg=utfsmblue}
+\setbeamercolor{frametitle}{fg=utfsmblue}
+
+%\setbeamercolor{section in head/foot}{bg=Brown}
+%\setbeamercolor{author in head/foot}{bg=Brown}
+%\setbeamercolor{date in head/foot}{fg=Brown}
+
+\setbeamercolor*{enumerate item}{fg=utfsmred}
+\setbeamercolor*{enumerate subitem}{fg=utfsmred}
+\setbeamercolor*{enumerate subsubitem}{fg=utfsmred}
+
+\setbeamercolor*{itemize item}{fg=utfsmred}
+\setbeamercolor*{itemize subitem}{fg=utfsmred}
+\setbeamercolor*{itemize subsubitem}{fg=utfsmred}
+
+\setbeamercolor{item projected}{bg=utfsmred}
+
+
+\setbeamertemplate{itemize items}[square]
+\setbeamertemplate{enumerate items}[default]
+
+
+\setbeamercolor{section in head/foot}{bg=utfsmblue}
+
+\setbeamercolor{block title}{bg=utfsmblue!80,fg=white}
+\setbeamercolor{block title alerted}{bg=utfsmred!80,fg=white}
+\setbeamercolor{block title example}{bg=utfsmgreen!80,fg=white}
+
+\setbeamertemplate{sections/subsections in toc}[square]
+\setbeamercolor{section number projected}{bg=utfsmblue,fg=white}
+
+
+}
+
+\usepackage[normalem]{ulem}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{listings}
+\lstset{ %
+language=C,
+basicstyle=\normalsize\ttfamily,
+keywordstyle=,
+numbers=none,
+numberstyle=\tiny\ttfamily,
+stepnumber=1,
+showspaces=false,
+showstringspaces=false,
+showtabs=false,
+breaklines=true,
+frame=tb,
+framerule=0.5pt,
+tabsize=4,
+framexleftmargin=0.5em,
+framexrightmargin=0.5em,
+xleftmargin=0.5em,
+xrightmargin=0.5em,
+}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{Red}
+\subtitle{\small{Seminario de Desarrollo de Software - Casa Central.}}
+\author{Maximiliano Osorio\\\small{mosorio@inf.utfsm.cl}} 
+\institute[UTFSM]
+{
+Universidad Técnica Federico Santa María
+\medskip
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+	
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+%
+%	TITLE PAGE
+%
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+
+
+
+%\begin{block}{Dependencias}
+%\end{block}
+\maketitle
+\section{Materia}
+
+\begin{frame}[fragile]
+\frametitle{Archivos importantes}
+\begin{itemize}
+	\item \texttt{/etc/hosts}
+	\item \texttt{/etc/resolv.conf}
+	\item \texttt{/etc/sysconfig/network}
+	\item \texttt{/etc/sysconfig/network-scripts/ifcfg-interface-name}
+\end{itemize}
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{\texttt{/etc/hosts}}
+
+El propósito principal es resolver los nombres que no pueden ser resueltos
+
+\begin{lstlisting}
+10.10.15.200   grupo01.mosorio.me grupo01
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{\texttt{/etc/resolv.conf}}
+
+El archivo especifica dirección IP de los servidores DNS y el search domain
+
+\begin{lstlisting}
+ resolv.conf(5)
+\end{lstlisting}
+
+
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{\texttt{/etc/sysconfig/network}}
+
+
+
+Este archivo especifica el ruteo y la información del host para todas las interfaces.
+
+Para mayor información revisar la \href{https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/ch-Network_Interfaces.html#s1-networkscripts-files}{documentación de RedHat}
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{\texttt{ifcfg-interface-name}}
+
+\texttt{/etc/sysconfig/network-scripts/ifcfg-interface-name}. \\ Para cada interfaz de red, existe un archivo de configuración
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{IP estática}
+\begin{lstlisting}
+DEVICE=eth0
+BOOTPROTO=none
+ONBOOT=yes
+NETMASK=255.255.255.0
+IPADDR=10.0.1.27
+DNS1=200.1.19.129
+DNS2=204.87.169.22
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{DHCP}
+\begin{lstlisting}
+DEVICE=eth0
+BOOTPROTO=dhcp
+ONBOOT=yes
+\end{lstlisting}
+\end{frame}
+%---------------
+
+
+\section{Curso}
+
+\begin{frame}[fragile]
+\frametitle{Laboratorio}
+\pause
+\begin{lstlisting}
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 00:1a:4a:78:92:5d brd ff:ff:ff:ff:ff:ff
+    inet 10.10.15.200/24 brd 10.10.15.255 scope global dynamic eth0
+       valid_lft 2409sec preferred_lft 2409sec
+    inet6 fe80::21a:4aff:fe78:925d/64 scope link
+       valid_lft forever preferred_lft forever
+3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 00:1a:4a:78:92:29 brd ff:ff:ff:ff:ff:ff
+    inet 10.10.21.34/24 brd 10.10.21.255 scope global dynamic eth1
+       valid_lft 3599sec preferred_lft 3599sec
+    inet6 fe80::be0e:768b:5e79:3d1f/64 scope link
+       valid_lft forever preferred_lft forever
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Pregunta}
+
+\begin{lstlisting}
+::1
+::
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{hostnamectl}
+\begin{lstlisting}
+hostnamectl set-hostname grupoXX-m1
+\end{lstlisting}
+\end{frame}
+
+
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{eth0}
+\begin{lstlisting}
+DEVICE="eth0"
+ONBOOT=yes
+BOOTPROTO=none
+IPADDR=${IP_PRIVADA}
+NETMASK=255.255.255.0
+ONBOOT=yes
+IPV6INIT=no
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{eth1}
+\begin{lstlisting}
+DEVICE="eth1"
+ONBOOT=yes
+BOOTPROTO=none
+IPADDR=${IP_PUBLICA}
+NETMASK=255.255.255.248
+GATEWAY=204.87.169.65
+DNS1=200.1.19.129
+DNS2=204.87.169.22
+IPV6INIT=no
+
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{Daemons}
+
+Desde RedHat 7, el servicio utilizado por defecto es NetworkManager. \sout{Pero durante en este laboratorio se utilizará network}. Por lo tanto,
+
+\begin{lstlisting}
+systemctl start NetworkManager
+systemctl enable NetworkManager
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{nm-cli}
+Configuración de la ip pública
+\begin{lstlisting}
+nmcli con add con-name eth1 type ethernet ifname eth1 ip4 204.87.169.127/29 gw4 204.87.169.65
+nmcli connection up eth1
+\end{lstlisting}
+\begin{lstlisting}
+nmcli connection modify eth1 ipv4.dns "200.1.19.16 8.8.8.8"
+nmcli connection up eth1
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{nm-cli}
+Configuración del DNS
+\begin{lstlisting}
+nmcli connection modify eth1 ipv4.dns "200.1.19.16 8.8.8.8"
+nmcli connection up eth1
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+
+
+\end{document}
+
+

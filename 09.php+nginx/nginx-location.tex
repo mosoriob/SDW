@@ -1,0 +1,273 @@
+
+\documentclass[xcolor=dvipsnames]{beamer} % dvipsnames gives more built-in colors
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+
+\mode<presentation> {
+
+\usetheme{CambridgeUS}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from
+
+\definecolor{utfsmred}{HTML}{D60019}
+\definecolor{utfsmyellow}{HTML}{F7AE00}
+\definecolor{utfsmgreen}{HTML}{008452}
+\definecolor{utfsmblue}{HTML}{004B85}
+
+
+\newenvironment<>{rosa}[1][]{
+  \setbeamercolor{block title example}{fg=white,bg=blue!75!black}%
+  \begin{example}#2[#1]}{
+  \end{example}
+}
+
+\usepackage{hyperref}
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usecolortheme[named=utfsmblue]{structure}
+\setbeamercolor{titlelike}{parent=structure,fg=utfsmblue}
+\setbeamercolor{frametitle}{fg=utfsmblue}
+
+%\setbeamercolor{section in head/foot}{bg=Brown}
+%\setbeamercolor{author in head/foot}{bg=Brown}
+%\setbeamercolor{date in head/foot}{fg=Brown}
+
+\setbeamercolor*{enumerate item}{fg=utfsmred}
+\setbeamercolor*{enumerate subitem}{fg=utfsmred}
+\setbeamercolor*{enumerate subsubitem}{fg=utfsmred}
+
+\setbeamercolor*{itemize item}{fg=utfsmred}
+\setbeamercolor*{itemize subitem}{fg=utfsmred}
+\setbeamercolor*{itemize subsubitem}{fg=utfsmred}
+
+\setbeamercolor{item projected}{bg=utfsmred}
+
+
+\setbeamertemplate{itemize items}[square]
+\setbeamertemplate{enumerate items}[default]
+
+
+\setbeamercolor{section in head/foot}{bg=utfsmblue}
+
+\setbeamercolor{block title}{bg=utfsmblue!80,fg=white}
+\setbeamercolor{block title alerted}{bg=utfsmred!80,fg=white}
+\setbeamercolor{block title example}{bg=utfsmgreen!80,fg=white}
+
+\setbeamertemplate{sections/subsections in toc}[square]
+\setbeamercolor{section number projected}{bg=utfsmblue,fg=white}
+
+
+}
+\usepackage{lmodern}  % for bold teletype font
+\usepackage{amsmath}  % for \hookrightarrow
+\usepackage{xcolor}   % for \textcolor
+\usepackage{listings}
+\usepackage[normalem]{ulem}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
+
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{Nginx - location block}
+\subtitle{\small{Seminario de Desarrollo de Software - Casa Central.}}
+\author{Maximiliano Osorio\\\small{mosorio@inf.utfsm.cl}} 
+\institute[UTFSM]
+{
+Universidad Técnica Federico Santa María
+\medskip
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+	
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+%
+%	TITLE PAGE
+%
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+
+
+
+%\begin{block}{Dependencias}
+%\end{block}
+\maketitle
+\section{Location block}
+
+\begin{frame}[fragile]
+\frametitle{Location block}
+De forma similar al serverblock, Nginx tiene un algoritmo para decidir distintos comportamiento por URI
+\begin{block}{Location blocks}
+Son usados para decidir como procesa un request URI (la parte del request que viene después del dominio o IP)
+\end{block}
+
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{Location block syntax}
+Generalmente son de la siguiente forma
+\begin{lstlisting}
+location optional_modifier location_match {
+
+    . . .
+
+}
+
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{Tipos}
+\begin{itemize}
+  \item (none)
+  \item \verb|=|
+  \item \verb|~|
+  \item \verb|~*|
+  \item \verb|^~|
+\end{itemize}
+
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{None}
+
+Si no hay modificadores presentes, el location es interpretado como un prefix match. \\
+Esto significa que la ubicación dada se comparará con el inicio de la URI de la solicitud para determinar una coincidencia.
+
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{None}
+/site, /site/page1/index.html, or /site/index.html:
+\begin{lstlisting}
+location /site {
+
+    . . .
+
+}
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{Equal}
+Para realizar un match exacto. \\
+No va a responder a /page1/index.html
+
+\begin{lstlisting}
+location = /page1 {
+
+    . . .
+
+}
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{Expresión regular case sensitive}
+Una expresión regular case-sensitive\\
+
+Funciona para /tortoise.jpg, pero no para /FLOWER.PNG:
+
+\begin{lstlisting}
+location ~ \.(jpe?g|png|gif|ico)$ {
+
+    . . .
+
+}
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{Expresión regular case insensitive}}
+Una expresión regular case-insensitive\\
+
+\begin{lstlisting}
+location ~* \.(jpe?g|png|gif|ico)$ {
+
+    . . .
+
+}
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Best non regex match}
+Cuando este modificador es usado, la url que hace match usará esta configuración sin importa si existe una expresión regular.0
+
+/images/lala.gif va a configuración D
+\begin{lstlisting}
+location ~* \.(gif|jpg|jpeg)$ {
+    [ configuration E ]
+}
+                    
+
+location ^~ /images/ {
+    [ configuration D ]
+}
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+
+
+\begin{frame}[fragile]
+\frametitle{Tarea}
+Entender el orden
+
+https://github.com/detailyang/nginx-location-match-visible
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{php-fpm + Nginx}
+\begin{lstlisting}
+
+location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_pass 127.0.0.1:9000;
+        #fastcgi_pass unix:/var/run/taxis.sock;
+        fastcgi_index index.php;
+        include fastcgi_params;
+}
+\end{lstlisting}
+\end{frame}
+%------------------------------------------------
+
+
+%------------------------------------------------
+
+\end{document}
+
+

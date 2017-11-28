@@ -1,0 +1,671 @@
+
+\documentclass[xcolor=dvipsnames]{beamer} % dvipsnames gives more built-in colors
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+
+\mode<presentation> {
+
+\usetheme{CambridgeUS}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from
+
+\definecolor{utfsmred}{HTML}{D60019}
+\definecolor{utfsmyellow}{HTML}{F7AE00}
+\definecolor{utfsmgreen}{HTML}{008452}
+\definecolor{utfsmblue}{HTML}{004B85}
+
+
+\newenvironment<>{rosa}[1][]{
+  \setbeamercolor{block title example}{fg=white,bg=blue!75!black}%
+  \begin{example}#2[#1]}{
+  \end{example}
+}
+
+
+
+\usecolortheme[named=utfsmblue]{structure}
+\setbeamercolor{titlelike}{parent=structure,fg=utfsmblue}
+\setbeamercolor{frametitle}{fg=utfsmblue}
+
+%\setbeamercolor{section in head/foot}{bg=Brown}
+%\setbeamercolor{author in head/foot}{bg=Brown}
+%\setbeamercolor{date in head/foot}{fg=Brown}
+
+\setbeamercolor*{enumerate item}{fg=utfsmred}
+\setbeamercolor*{enumerate subitem}{fg=utfsmred}
+\setbeamercolor*{enumerate subsubitem}{fg=utfsmred}
+
+\setbeamercolor*{itemize item}{fg=utfsmred}
+\setbeamercolor*{itemize subitem}{fg=utfsmred}
+\setbeamercolor*{itemize subsubitem}{fg=utfsmred}
+
+\setbeamercolor{item projected}{bg=utfsmred}
+
+
+\setbeamertemplate{itemize items}[square]
+\setbeamertemplate{enumerate items}[default]
+
+
+\setbeamercolor{section in head/foot}{bg=utfsmblue}
+
+\setbeamercolor{block title}{bg=utfsmblue!80,fg=white}
+\setbeamercolor{block title alerted}{bg=utfsmred!80,fg=white}
+\setbeamercolor{block title example}{bg=utfsmgreen!80,fg=white}
+
+\setbeamertemplate{sections/subsections in toc}[square]
+\setbeamercolor{section number projected}{bg=utfsmblue,fg=white}
+
+
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+\usepackage{listings}
+\lstset{ %
+language=C,
+basicstyle=\normalsize\ttfamily,
+keywordstyle=,
+numbers=none,
+numberstyle=\tiny\ttfamily,
+stepnumber=1,
+showspaces=false,
+showstringspaces=false,
+showtabs=false,
+breaklines=true,
+frame=tb,w
+framerule=0.5pt,
+tabsize=4,
+framexleftmargin=0.5em,
+framexrightmargin=0.5em,
+xleftmargin=0.5em,
+xrightmargin=0.5em,
+}
+
+\title{Yum}
+\subtitle{\small{\\Seminario de Desarrollo de Software - Casa Central.} }
+\date{\today}
+\author{\texttt{Maximiliano Osorio \\ <mosorio@inf.utfsm.cl>}}
+\institute{Universidad Técnica Federico Santa María}
+
+\hypersetup{
+pdfauthor = {Maximiliano Osorio\\
+ mosorio@inf.utfsm.cl},      
+pdfsubject = {Informatica, },
+pdfkeywords = {},  
+pdfmoddate= {},          
+pdfcreator = {}
+}
+
+\begin{document}
+
+\maketitle
+\begin{frame}[fragile]
+    \frametitle{yum}
+
+Yum es el Red Hat package manager permite:
+\begin{itemize}
+\item Consultar sobre información de los paquetes.
+\item Traer paquetes de repositorios
+\item Instalar o desinstalar.
+\end{itemize}
+
+\begin{block}{Dependencias}
+Yum realiza resolución de dependecias de forma automatica cuando se instalar, actualiza o se remueven paquetes
+\end{block}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{Yum}
+\begin{itemize}
+\item Yum puede ser configurado con nuevos repositorios o paquetes de código fuente (\texttt{package source}).
+\item Además yum provee multiples plugins para extender sus capacidades.
+\item Yum utiliza GPG, yum no instalará el paquete del repositorio sino está firmado con la llave correcta.
+\end{itemize}
+
+
+\end{frame}
+
+
+
+
+
+\begin{frame}[fragile]
+    \frametitle{Actualización}
+Para verificar si existen actualizaciones
+\begin{lstlisting}
+yum check-update
+\end{lstlisting}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+    \frametitle{Actualización}
+    \begin{lstlisting}[basicstyle=\small]
+~]# yum check-update
+Loaded plugins: langpacks, product-id, subscription-manager
+Updating Red Hat repositories.
+INFO:rhsm-app.repolib:repos updated: 0
+PackageKit.x86_64                  0.5.8-2.el6                rhel
+PackageKit-glib.x86_64             0.5.8-2.el6                rhel
+PackageKit-yum.x86_64              0.5.8-2.el6                rhel
+PackageKit-yum-plugin.x86_64       0.5.8-2.el6                rhel
+glibc.x86_64                       2.11.90-20.el6             rhel
+glibc-common.x86_64                2.10.90-22                 rhel
+kernel.x86_64                      2.6.31-14.el6              rhel
+rpm.x86_64                         4.7.1-5.el6                rhel
+rpm-libs.x86_64                    4.7.1-5.el6                rhel
+rpm-python.x86_64                  4.7.1-5.el6                rhel
+yum.noarch                         3.2.24-4.el6               rhel
+\end{lstlisting}
+\end{frame}
+
+
+
+
+\begin{frame}[fragile]
+    \frametitle{Actualización}
+Para verificar si existen actualizaciones
+\begin{lstlisting}[basicstyle=\small]
+~]# yum update rpm
+Loaded plugins: langpacks, product-id, subscription-manager
+Updating Red Hat repositories.
+INFO:rhsm-app.repolib:repos updated: 0
+Setting up Update Process
+Resolving Dependencies
+--> Running transaction check
+---> Package rpm.x86_64 0:4.11.1-3.el7 will be updated
+--> Processing Dependency: rpm = 4.11.1-3.el7 for package: rpm-libs-4.11.1-3.el7.x86_64
+--> Processing Dependency: rpm = 4.11.1-3.el7 for package: rpm-python-4.11.1-3.el7.x86_64
+--> Processing Dependency: rpm = 4.11.1-3.el7 for package: rpm-build-4.11.1-3.el7.x86_64
+---> Package rpm.x86_64 0:4.11.2-2.el7 will be an update
+--> Running transaction check
+...
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+=============================================================================
+ Package                   Arch        Version         Repository       Size
+=============================================================================
+Updating:
+ rpm                       x86_64      4.11.2-2.el7    rhel            1.1 M
+Updating for dependencies:
+ rpm-build                 x86_64      4.11.2-2.el7    rhel            139 k
+ rpm-build-libs            x86_64      4.11.2-2.el7    rhel             98 k
+ rpm-libs                  x86_64      4.11.2-2.el7    rhel            261 k
+ rpm-python                x86_64      4.11.2-2.el7    rhel             74 k
+
+Transaction Summary
+=============================================================================
+Upgrade  1 Package (+4 Dependent packages)
+
+Total size: 1.7 M
+Is this ok [y/d/N]:
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Info}
+En el ejemplo anterior se observar
+\begin{itemize}
+\item Plugins
+\begin{itemize}
+\item langpacks
+\item product-id 
+\item subscription-manager
+\end{itemize}
+\item  Yum por defecto es interactivo, si se utiliza \texttt{-y} automaticamente se responde que \textbf{si}
+\end{itemize}
+\begin{lstlisting}
+yum update package_name
+\end{lstlisting}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+    \frametitle{Actualización}
+Actualizar todo.
+\begin{lstlisting}
+yum update
+\end{lstlisting}
+Actualizar los paquetes que contengan una actualización de seguridad a la ultima versión
+\begin{lstlisting}
+yum update --security
+\end{lstlisting}
+Actualizar los paquetes que contengan una actualización de seguridad a esa versión
+\begin{lstlisting}
+yum update-minimal --security
+\end{lstlisting}
+
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{Actualización}
+    \begin{itemize}
+    \item kernel-4.1.6-1 está instalado
+    \item kernel-4.1.6-2 ha sido lanzado como security update
+    \item  kernel-4.1.6-3 ha sido lanzado como bug fix update.
+    \end{itemize}
+
+yum update-minimal --security actualiza el paquete a kernel-4.1.6-2 y  yum update --security actualiza al kernel-4.1.6-3.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{Buscando paquetes}
+\begin{lstlisting}
+yum search term
+\end{lstlisting}
+
+\begin{lstlisting}
+~]$ yum search meld kompare
+Loaded plugins: langpacks, langpacks, product-id, subscription-manager
+Updating Red Hat repositories.
+INFO:rhsm-app.repolib:repos updated: 0
+============================ N/S matched: kompare =============================
+kompare.x86_64 : Diff tool
+...
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{Filtrando paquetes}
+Listar paquetes disponibles e instalados.
+\begin{lstlisting}
+~]$ yum list abrt-addon\* abrt-plugin\*
+\end{lstlisting}
+
+\begin{lstlisting}
+~]$ yum list installed "krb?-*"
+\end{lstlisting}
+
+\begin{lstlisting}
+~]$ yum search "krb?-*"
+\end{lstlisting}
+
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+    \frametitle{Listando repositorios}
+Para listar los repositorios: nombre,id,número de paquetes.    
+\begin{lstlisting}
+yum repolist
+\end{lstlisting}
+
+Para listar los repositorios: nombre,id,número de paquetes.    
+\begin{lstlisting}
+yum repolist -v 
+
+...
+
+Repo-id      : uSCI-noarch/7
+Repo-name    : uSCI RHEL 7 - noarch
+Repo-revision: 1430402446
+Repo-updated : Thu Apr 30 09:00:46 2015
+Repo-pkgs    : 21
+Repo-size    : 3.3 M
+Repo-baseurl : http://ftp.inf.utfsm.cl/pub/UTFSM/uSCI/RHEL/7/noarch/
+Repo-expire  : 604,800 second(s) (last: Sun Nov 29 19:32:47 2015)
+Repo-filename: /etc/yum.repos.d/usci.repo
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Listando repositorios}
+
+Para listar los repositorios de forma detallada    
+\begin{lstlisting}
+yum repolist -v 
+yum repoinfo 
+\end{lstlisting}
+\begin{lstlisting}
+Repo-id      : uSCI-noarch/7
+Repo-name    : uSCI RHEL 7 - noarch
+Repo-revision: 1430402446
+Repo-updated : Thu Apr 30 09:00:46 2015
+Repo-pkgs    : 21
+Repo-size    : 3.3 M
+Repo-baseurl : http://ftp.inf.utfsm.cl/pub/UTFSM/uSCI/RHEL/7/noarch/
+Repo-expire  : 604,800 second(s) (last: Sun Nov 29 19:32:47 2015)
+Repo-filename: /etc/yum.repos.d/usci.repo
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Información de un paquete}
+Para verificar si existen actualizaciones
+\begin{lstlisting}
+~]$ yum info abrt
+Loaded plugins: langpacks, product-id, subscription-manager
+Updating Red Hat repositories.
+INFO:rhsm-app.repolib:repos updated: 0
+Installed Packages
+Name       : abrt
+Arch       : x86_64
+Version    : 1.0.7
+Release    : 5.el6
+Size       : 578 k
+Repo       : installed
+From repo  : rhel
+Summary    : Automatic bug detection and reporting tool
+URL        : https://fedorahosted.org/abrt/
+License    : GPLv2+
+Description: abrt is a tool to help users to detect defects in applications
+           : and to create a bug report with all informations needed by
+           : maintainer to fix it. It uses plugin system to extend its
+           : functionality.
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{Instalando paquetes}
+Para instalar un paquete
+\begin{lstlisting}
+yum install package_name package_name…
+yum install package_name.arch
+~]# yum install sqlite.i686
+~]# yum install audacious-plugins-\*
+
+\end{lstlisting}
+
+Si conoce el ejecutable del paquete 
+\begin{lstlisting}
+~]# yum install /bin/netstat    
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{Buscando por ejecutable}
+\begin{lstlisting}
+~]# yum provides "*bin/named"
+Loaded plugins: langpacks, product-id, subscription-manager
+Updating Red Hat repositories.
+INFO:rhsm-app.repolib:repos updated: 0
+32:bind-9.7.0-4.P1.el6.x86_64 : The Berkeley Internet Name Domain (BIND)
+                              : DNS (Domain Name System) server
+Repo        : rhel
+Matched from:
+Filename    : /usr/sbin/named
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Grupos}
+\begin{lstlisting}
+yum group list ids kde\*
+Loaded plugins: fastestmirror
+There is no installed groups file.
+Maybe run: yum groups mark convert (see man yum)
+Loading mirror speeds from cached hostfile
+ * epel: ftp.inf.utfsm.cl
+Available environment groups:
+   KDE Plasma Workspaces (kde-desktop-environment)
+Done
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Instalar por grupos}
+Multiples formas
+\begin{lstlisting}
+~]# yum group install "KDE Desktop"
+~]# yum group install kde-desktop
+~]# yum install @"KDE Desktop"
+~]# yum install @kde-desktop
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Removiendo grupos}
+\begin{lstlisting}
+~]# yum group remove "KDE Desktop"
+~]# yum group remove kde-desktop
+~]# yum remove @"KDE Desktop"
+~]# yum remove @kde-desktop
+\end{lstlisting}
+\end{frame}
+
+\section{Yum History}
+
+\begin{frame}[fragile]
+    \frametitle{yum}
+
+Mostrar de las ultimas 20 transacciones.
+\begin{lstlisting}
+yum history list
+\end{lstlisting}
+Todas las listas 
+\begin{lstlisting}
+yum history list all
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{yum}
+\begin{table}[]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|}
+\hline
+Action & Abbreviation & Description \\ \hline
+Downgrade & D & \begin{tabular}[c]{@{}l@{}}At least one package has been\\ downgraded to an older version.\end{tabular} \\ \hline
+Erase & E & \begin{tabular}[c]{@{}l@{}}At least one package \\ has been removed.\end{tabular} \\ \hline
+Install & I & \begin{tabular}[c]{@{}l@{}}At least one new package\\ has been installed.\end{tabular} \\ \hline
+Obsoleting & O & \begin{tabular}[c]{@{}l@{}}At least one package has \\ been marked as obsolete.\end{tabular} \\ \hline
+Reinstall & R & \begin{tabular}[c]{@{}l@{}}At least one package has\\ been reinstalled.\end{tabular} \\ \hline
+Update & U & \begin{tabular}[c]{@{}l@{}}At least one package has\\ been updated to a newer version.\end{tabular} \\ \hline
+\end{tabular}
+}
+\end{table}
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{yum}
+    
+\begin{lstlisting}[basicstyle=\tiny]
+[root@ip123 ~]# yum history summary
+Loaded plugins: fastestmirror
+Login user                 | Time                | Action(s)        | Altered
+-------------------------------------------------------------------------------
+root <root>                | Last 2 weeks        | I, U             |        4
+ <mosorio>                 | Last 3 months       | I, U             |       53
+root <root>                | Last 3 months       | Install          |       19
+System <unset>             | Last year           | Install          |      298
+root <root>                | Last year           | E, I, O, U       |      283
+history summary
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{yum}
+\begin{lstlisting}
+[root@ip123 ~]# yum history package-list openssh\*
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{yum}
+\begin{lstlisting}
+yum history info $id
+yum history info 9
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Deshacer o repetir}
+\begin{lstlisting}
+yum history undo id
+yum history redo id
+
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{yum.conf}
+    
+El archivo de configuración se encuentra \textbf{/etc/yum.conf}, esto incluye los archivos de repositorios
+\begin{lstlisting}
+[uSCI-noarch]
+name=uSCI RHEL $releasever - noarch
+failovermethod=priority
+baseurl=http://ftp.inf.utfsm.cl/pub/UTFSM/uSCI/RHEL/$releasever/noarch/
+enabled=1
+metadata_expire=7d
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-uSCI
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{yum.conf}
+    La configuración se puede ver y modificar con \textbf{yum-config-manager}
+\begin{lstlisting}
+~]$ yum-config-manager main \*
+
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Añadiendo, activando o desactivando repositorios}
+\begin{lstlisting}
+$yum-config-manager --add-repo repository_url
+\end{lstlisting}
+
+\begin{lstlisting}
+~]# yum-config-manager --add-repo http://www.example.com/example.repo
+Loaded plugins: langpacks, product-id, subscription-manager
+adding repo from: http://www.example.com/example.repo
+grabbing file http://www.example.com/example.repo to /etc/yum.repos.d/example.repo
+example.repo                                             |  413 B     00:00
+repo saved to /etc/yum.repos.d/example.repo
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Activando repos}
+\begin{lstlisting}
+~]# yum-config-manager --enable example\*
+Loaded plugins: langpacks, product-id, subscription-manager
+============================== repo: example ==============================
+[example]
+bandwidth = 0
+base_persistdir = /var/lib/yum/repos/x86_64/7Server
+baseurl = http://www.example.com/repo/7Server/x86_64/
+cache = 0
+cachedir = /var/cache/yum/x86_64/7Server/example
+[output truncated]
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Activando todos los repos}
+\begin{lstlisting}
+~]# yum-config-manager --enable \*
+Loaded plugins: langpacks, product-id, subscription-manager
+============================== repo: example ==============================
+[example]
+bandwidth = 0
+base_persistdir = /var/lib/yum/repos/x86_64/7Server
+baseurl = http://www.example.com/repo/7Server/x86_64/
+cache = 0
+cachedir = /var/cache/yum/x86_64/7Server/example
+[output truncated]
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{Creando un repositorio}
+    
+\begin{lstlisting}
+yum install createrepo
+    reposync -l --repoid=$repo --downloadcomps --download-metadata --download_path=$path
+    createrepo -v $path/$repo
+\end{lstlisting}
+
+\end{frame}
+
+\section{Cron}
+
+\begin{frame}[fragile]
+    \frametitle{yum}
+
+Cron es un daemon que puede hacer un scheduler de  tareas en cierto puntos de tiempos: dia del mes, semana.
+\begin{lstlisting}
+~]# yum install cronie cronie-anacron
+systemctl start crond.service
+systemctl enable crond.service
+
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{crontab}
+
+El archivo de configuración de cron jobs se encuentra en \textbf{/etc/crontab}
+\begin{lstlisting}[basicstyle=\tiny]
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+HOME=/
+# For details see man 4 crontabs
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# | .------------- hour (0 - 23)
+# | | .---------- day of month (1 - 31)
+# | | | .------- month (1 - 12) OR jan,feb,mar,apr ...
+# | | | | .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# | | | | |
+# * * * * * user-name command to be executed
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{crontab}
+
+\begin{lstlisting}[basicstyle=\small]
+00 11,16 * * * /home/ramesh/bin/incremental-backup
+00 – 0th Minute (Top of the hour)
+11,16 – 11 AM and 4 PM
+* – Every day
+* – Every month
+* – Every day of the week
+\end{lstlisting}
+
+\begin{lstlisting}
+00 09-18 * * * /home/ramesh/bin/check-db-status
+00 – 0th Minute (Top of the hour)
+09-18 – 9 am, 10 am,11 am, 12 am, 1 pm, 2 pm, 3 pm, 4 pm, 5 pm, 6 pm
+* – Every day
+* – Every month
+* – Every day of the week
+\end{lstlisting}
+
+\end{frame}
+
+
+\end{document}
+
+

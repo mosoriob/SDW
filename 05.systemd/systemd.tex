@@ -1,0 +1,256 @@
+
+\documentclass[xcolor=dvipsnames]{beamer} % dvipsnames gives more built-in colors
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+
+\mode<presentation> {
+
+\usetheme{CambridgeUS}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from
+
+\definecolor{utfsmred}{HTML}{D60019}
+\definecolor{utfsmyellow}{HTML}{F7AE00}
+\definecolor{utfsmgreen}{HTML}{008452}
+\definecolor{utfsmblue}{HTML}{004B85}
+
+
+\newenvironment<>{rosa}[1][]{
+  \setbeamercolor{block title example}{fg=white,bg=blue!75!black}%
+  \begin{example}#2[#1]}{
+  \end{example}
+}
+
+
+
+\usecolortheme[named=utfsmblue]{structure}
+\setbeamercolor{titlelike}{parent=structure,fg=utfsmblue}
+\setbeamercolor{frametitle}{fg=utfsmblue}
+
+%\setbeamercolor{section in head/foot}{bg=Brown}
+%\setbeamercolor{author in head/foot}{bg=Brown}
+%\setbeamercolor{date in head/foot}{fg=Brown}
+
+\setbeamercolor*{enumerate item}{fg=utfsmred}
+\setbeamercolor*{enumerate subitem}{fg=utfsmred}
+\setbeamercolor*{enumerate subsubitem}{fg=utfsmred}
+
+\setbeamercolor*{itemize item}{fg=utfsmred}
+\setbeamercolor*{itemize subitem}{fg=utfsmred}
+\setbeamercolor*{itemize subsubitem}{fg=utfsmred}
+
+\setbeamercolor{item projected}{bg=utfsmred}
+
+
+\setbeamertemplate{itemize items}[square]
+\setbeamertemplate{enumerate items}[default]
+
+
+\setbeamercolor{section in head/foot}{bg=utfsmblue}
+
+\setbeamercolor{block title}{bg=utfsmblue!80,fg=white}
+\setbeamercolor{block title alerted}{bg=utfsmred!80,fg=white}
+\setbeamercolor{block title example}{bg=utfsmgreen!80,fg=white}
+
+\setbeamertemplate{sections/subsections in toc}[square]
+\setbeamercolor{section number projected}{bg=utfsmblue,fg=white}
+
+
+}
+
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{listings}
+\lstset{ %
+language=C,
+basicstyle=\normalsize\ttfamily,
+keywordstyle=,
+numbers=none,
+numberstyle=\tiny\ttfamily,
+stepnumber=1,
+showspaces=false,
+showstringspaces=false,
+showtabs=false,
+breaklines=true,
+frame=tb,
+framerule=0.5pt,
+tabsize=4,
+framexleftmargin=0.5em,
+framexrightmargin=0.5em,
+xleftmargin=0.5em,
+xrightmargin=0.5em,
+}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{Systemd}
+\subtitle{\small{Seminario de Desarrollo de Software - Casa Central.}}
+\author{Maximiliano Osorio\\\small{mosorio@inf.utfsm.cl}} 
+\institute[UTFSM]
+{
+Universidad Técnica Federico Santa María
+\medskip
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+	
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+%
+%	TITLE PAGE
+%
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+
+
+\maketitle
+
+\begin{frame}[fragile]
+\frametitle{Daemon}
+
+Daemons son procesos que esperan o corren en background realizando diversas tareas.
+
+Generalmente daemons corren de manera automática cuando se inicia el sistema (boot) y continuan hasta al shutdown o cuando son parados de manera manual.
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+    \frametitle{init}
+Por durante muchos años, process ID 1 de Linux fue llamado init process. Este era el responsable de activar los otros servicios del sistema. 
+Normalmente los daemons eran iniciados por System V y LSB scripts. Estos son scripts y variaban de distro a distro.
+
+En RHEL 7, proceso ID1 es systemd, el nuevo sistema de init.
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Init}
+\begin{itemize}
+  \item threadd process is responsible for creating additional processes that perform tasks on behalf of the kernel
+\end{itemize}
+
+\end{frame}
+%------------------------------------------------
+
+
+\begin{frame}[fragile]
+    \frametitle{System}
+System startup y ciertos procesos son manejados por System and Service Manager (systemd). \\
+Este programa provee una forma de activar recursos del sistema, server daemons y otros procesos.
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Ejemplo}
+nginx
+\end{frame}
+%------------------------------------------------
+
+
+
+
+\begin{frame}[fragile]
+    \frametitle{Variables}
+
+Las variables se encuentran en \textbf{/etc/sysconfig}. Y en los archivos se pueden encontrar definiciones en pares de NAME=VALUE.
+
+\begin{lstlisting}
+cat /etc/sysconfig/docker
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{systemctl}
+	\textbf{systemctl} es usado para manejar diversos tipos de objetos, llamado \textbf{units}
+	Se pueden obtener con:
+	\begin{lstlisting}
+		systemctl -l
+	\end{lstlisting}
+	Tipos de \textbf{units}
+	\begin{itemize}
+		\item Socket units termina en .socket
+		\item Service units terminan en .service. Este tipo de unit es usado para trabajar con daemons.
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+    \frametitle{Service states}
+	\textbf{systemctl status name.type} muestra el estado de una unidad.  Si el tipo de la unidad no es especificada, se muestra el name.service.
+	Se pueden obtener con:
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Service states}
+	\begin{lstlisting}[basicstyle=\small]
+systemctl status sshd.service
+sshd.service - OpenSSH server daemon
+   Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled)
+   Active: active (running) since Sun 2015-11-22 12:34:51 ACT; 10h ago
+ Main PID: 1206 (sshd)
+   CGroup: /system.slice/sshd.service
+           1206 /usr/sbin/sshd -D
+
+Nov 22 12:34:51 ip122.15.priv.inf.utfsm.cl sshd[1206]: Server listening on 0.0.0.0 port 22.
+Nov 22 12:34:51 ip122.15.priv.inf.utfsm.cl sshd[1206]: Server listening on :: port 22.
+	\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}{Estados}
+\begin{itemize}
+	\item loaded: El archivo de configuración ha sido procesado.
+	\item active (running): Corriendo con uno o mas procesos.
+	\item active (exited): Exitosamente completado.
+	\item active (waiting): Corriendo pero esperando un evento.
+	\item inactive: No corriendo
+	\item enabled: Va a correr en booteo
+	\item disabled: No va a correr en el booteo
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Controlando los servicios}
+Viendo el estado
+\begin{lstlisting}
+	systemctl status sshd.service	\end{lstlisting}
+
+Iniciar el servicio
+\begin{lstlisting}
+	systemctl start sshd.service
+\end{lstlisting}
+Parar el servicio
+\begin{lstlisting}
+	systemctl stop sshd.service
+\end{lstlisting}
+Reload de la configuración, el PID no va a cambiar (HUP).
+\begin{lstlisting}
+	systemctl reload sshd.service
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Unit dependencies}
+Puede ser utilizado para mostrar un árbol de dependencias.
+\begin{lstlisting}
+systemctl list-dependencies docker
+\end{lstlisting}	
+
+\end{frame}
+
+
+
+\end{document}

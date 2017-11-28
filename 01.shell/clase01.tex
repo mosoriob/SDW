@@ -1,0 +1,339 @@
+
+\documentclass[xcolor=dvipsnames]{beamer} % dvipsnames gives more built-in colors
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+
+\mode<presentation> {
+
+\usetheme{CambridgeUS}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from
+
+\definecolor{utfsmred}{HTML}{D60019}
+\definecolor{utfsmyellow}{HTML}{F7AE00}
+\definecolor{utfsmgreen}{HTML}{008452}
+\definecolor{utfsmblue}{HTML}{004B85}
+
+
+\newenvironment<>{rosa}[1][]{
+  \setbeamercolor{block title example}{fg=white,bg=blue!75!black}%
+  \begin{example}#2[#1]}{
+  \end{example}
+}
+
+
+
+\usecolortheme[named=utfsmblue]{structure}
+\setbeamercolor{titlelike}{parent=structure,fg=utfsmblue}
+\setbeamercolor{frametitle}{fg=utfsmblue}
+
+%\setbeamercolor{section in head/foot}{bg=Brown}
+%\setbeamercolor{author in head/foot}{bg=Brown}
+%\setbeamercolor{date in head/foot}{fg=Brown}
+
+\setbeamercolor*{enumerate item}{fg=utfsmred}
+\setbeamercolor*{enumerate subitem}{fg=utfsmred}
+\setbeamercolor*{enumerate subsubitem}{fg=utfsmred}
+
+\setbeamercolor*{itemize item}{fg=utfsmred}
+\setbeamercolor*{itemize subitem}{fg=utfsmred}
+\setbeamercolor*{itemize subsubitem}{fg=utfsmred}
+
+\setbeamercolor{item projected}{bg=utfsmred}
+
+
+\setbeamertemplate{itemize items}[square]
+\setbeamertemplate{enumerate items}[default]
+
+
+\setbeamercolor{section in head/foot}{bg=utfsmblue}
+
+\setbeamercolor{block title}{bg=utfsmblue!80,fg=white}
+\setbeamercolor{block title alerted}{bg=utfsmred!80,fg=white}
+\setbeamercolor{block title example}{bg=utfsmgreen!80,fg=white}
+
+\setbeamertemplate{sections/subsections in toc}[square]
+\setbeamercolor{section number projected}{bg=utfsmblue,fg=white}
+
+
+}
+
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{listings}
+\lstset{ %
+basicstyle=\normalsize\ttfamily,
+keywordstyle=,
+numbers=none,
+numberstyle=\tiny\ttfamily,
+stepnumber=1,
+showspaces=false,
+showstringspaces=false,
+showtabs=false,
+breaklines=true,
+frame=tb,
+framerule=0.5pt,
+tabsize=4,
+framexleftmargin=0.5em,
+framexrightmargin=0.5em,
+xleftmargin=0.5em,
+xrightmargin=0.5em,
+}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{Linux Básico}
+\subtitle{\small{Seminario de Desarrollo de Software - Casa Central.}}
+\author{Maximiliano Osorio\\\small{mosorio@inf.utfsm.cl}} 
+\institute[UTFSM]
+{
+Universidad Técnica Federico Santa María
+\medskip
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}[fragile]
+\frametitle{Bash shell}
+\begin{itemize}
+	\item \textit{Command line} es una interfaz de texto para recibir instrucciones. En Linux el programa que lo provee es llamado shell.
+	\item Por defecto la shell es RedHat es llamada Bash, existen otras como: sh, zsh, etc.
+	\item Prompt: Es el caracter cuando está esperando.
+	\item El \textbf{command} es el nombre del programa a correr.
+	\item Los \textbf{commands} se dividen:
+	\begin{itemize}
+		\item Command a correr
+		\item Options, para ajustar el comportamiento del comando.
+		\item Arguments
+	\end{itemize}
+	
+	\begin{lstlisting}
+		$ usermod -L morgan
+	\end{lstlisting}
+\end{itemize}
+	
+\end{frame}
+\section{Ayuda}
+\subsection{Manuales}
+\begin{frame}[fragile]
+\frametitle{¿Cómo pedir ayuda?}
+
+
+\begin{itemize}
+	\item Los \textbf{commands} tienen su ayuda en el programa.
+	\begin{itemize}
+		\item date --help
+	\end{itemize}
+	\begin{lstlisting}
+date --help
+Usage: date [OPTION]... [+FORMAT]
+  or:  date [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]
+Display the current time in the given FORMAT, or set the system date.
+**** output truncado ****
+	\end{lstlisting}
+\end{itemize}
+ 
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{man}
+	\textbf{man} es el comando para acceder a los manuales de Linux.
+	\begin{itemize}
+		\item Los manuales están construidos en la mayoria de los sistemas Linux.
+		\item Proveen una documentación extensa sobre los \textit{commands} y otros aspectos del sistemas.
+	\end{itemize}
+	\begin{lstlisting}
+		$ man -k date
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{man}
+\begin{itemize}
+	\item Brackets [] representa items opcionales.
+	\item Cualquier cosa seguida de tres puntos (...) representa una lista de items del largo arbitario
+	\item Multiples items separados por pipes | representa que solo una opción puede ser especificada.
+	\item Texto en brackets \verb|<>| valor mandatorio.
+\end{itemize}
+
+\begin{lstlisting}
+NAME
+       date - print or set the system date and time
+
+SYNOPSIS
+       date [OPTION]... [+FORMAT]
+       date [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]	
+\end{lstlisting}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+\frametitle{Ejemplos - date}
+
+\begin{lstlisting}
+[mosorio@ssh ~]$ date
+Mon Oct  5 21:54:57 CLT 2015
+\end{lstlisting}
+\begin{lstlisting}
+[mosorio@ssh ~]$ date +%R
+21:55
+\end{lstlisting}
+\begin{lstlisting}
+[mosorio@ssh ~]$ date +%x
+10/05/2015
+\end{lstlisting}
+
+\begin{lstlisting}
+[mosorio@ssh ~]$ passwd
+\end{lstlisting}
+\end{frame}
+
+\section{Ejemplos de comandos}
+\begin{frame}[fragile]
+\frametitle{Ejemplos - passwd}
+\begin{lstlisting}
+[mosorio@losvilos ~]$ passwd
+Changing password for user mosorio.
+Changing password for mosorio.
+(current) UNIX password:
+New password:
+Retype new password:
+passwd: all authentication tokens updated successfully.
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Tipo de archivos}
+Linux no necesita extensiones para identificar los archivos. \textbf{file} hace un scan para detectar el tipo.
+
+\begin{lstlisting}
+[root@losvilos ~]# file /bin/passwd
+/bin/passwd: setuid ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=4984e8b5a58b4a2ed119be78eff90ca79fd0ebb6, stripped
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{cat	}
+cat es una buena 
+\begin{lstlisting}
+[mosorio@ssh ~]$ cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+
+...
+\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{head}
+\begin{lstlisting}
+[root@losvilos ~]# head -n 5 /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{COUNT}
+\begin{lstlisting}
+[root@losvilos ~]# wc /etc/passwd
+  64  148 3531 /etc/passwd
+[root@losvilos ~]# wc -l /etc/passwd
+64 /etc/passwd
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{tab tab}
+\begin{lstlisting}
+[root@losvilos ~]# pas<tab>
+passmass     passwd       paste        pasuspender
+[root@losvilos ~]# pass<tab>
+passmass  passwd
+[root@losvilos ~]# passwd
+\end{lstlisting}
+
+\begin{lstlisting}
+[root@losvilos ~]# useradd --<tab>	
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{History}
+\begin{lstlisting}
+[root@losvilos ~]# history
+ 2619  Oct/05 - 22:03:27 su - mosorio
+ 2620  Oct/05 - 22:14:13 file /etc/passwd
+ 2621  Oct/05 - 22:14:48 file /etc/shadow
+ 2622  Oct/05 - 22:14:59 file /bin/passwd
+ 2623  Oct/05 - 22:24:22 head -n 5 /etc/passwd
+ 2624  Oct/05 - 22:24:45 wc /etc/passwd
+ 2625  Oct/05 - 22:24:51 wc -l /etc/passwd
+ 2626  Oct/05 - 22:30:58 history	
+\end{lstlisting}
+
+\begin{lstlisting}
+[root@losvilos ~]# !wc
+wc -l /etc/passwd
+64 /etc/passwd
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Atajos}
+\begin{table}[]
+\centering
+\label{my-label}
+\begin{tabular}{|l|l|}
+\hline
+Comando          & Times {[}s{]}                      \\ \hline
+ctrl+a           & Inicio de la linea de comandos     \\ \hline
+ctrl+e           & Final de la linea de comandos      \\ \hline
+ctrl+u           & Limpiar desde el inicio al cursor  \\ \hline
+ctrl+k           & Limpiar desde el cursor al final   \\ \hline
+ctrl+left arrow  & Salta a la palabra izquierda       \\ \hline
+ctrl+right arrow & Salta a la palabra derecha         \\ \hline
+ctrl+r           & Buscar en el history por un patrón \\ \hline
+ctrl+d           & Salir de la shell \\ \hline
+
+\end{tabular}
+\end{table}
+\end{frame}
+
+
+\begin{frame}{Ejercicio}
+	\begin{enumerate}
+		\item Muestre los accesos que están ocurriendo en su servidor web. \texttt{/var/log/nginx/access.log}
+		\item Muestre los últimos 10 errores en su servidor en nginx  \texttt{/var/log/nginx/error.log}
+		\item Muestre la configuración de red de la interfaz eth0 de su servidor, se encuentra en \texttt{/etc/sysconfig/network-scripts/ifcfg-eth0}
+		\item Tipo de archivo del archivo /etc/passwd ¿es leible por humanos?
+		\item ext4 es un sistema de archivo, busque la documentación para este tipo de archivo.
+		\item Utilice ctrl+r para mostrar la hora como en el paso 1.
+	\end{enumerate}
+\end{frame}
+
+\end{document}
